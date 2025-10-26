@@ -7,7 +7,11 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/api/auth', require('./routes/auth'));
+
+app.use('/api/auth', require('./routes/auth').authRouter);
+app.use('/api/user', require('./routes/user').userRouter);
+app.use('/api/sync', require('./routes/sync').syncRouter);
+app.use('/api/auth', require('./routes/oauth').oauthRouter);
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
@@ -18,7 +22,9 @@ mongoose.connect(process.env.MONGODB_URI)
   });
 
 app.get('/api/health', (req, res) => {
-  res.json({ message: 'Server is running!' });
+  res.json({ 
+    message: 'Server is running!' 
+  });
 });
 
 const PORT = process.env.PORT || 5000;
